@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Conflicts{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Rule Conflicts</h1>
+
+{% if conflicts %}
+    <div class="alert alert-warning">
+        <strong>{{ conflicts|length }} conflict(s) detected</strong>
+        <p>These conflicts may cause unexpected behavior in your network.</p>
+    </div>
+    
+    {% for conflict in conflicts %}
+        <div class="card mb-3 conflict">
+            <div class="card-body">
+                <h5 class="card-title">Conflict on device: {{ conflict['device_name'] }}</h5>
+                <p>{{ conflict['description'] }}</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-2">
+                            <div class="card-header">Rule 1</div>
+                            <div class="card-body">
+                                <p><span class="{{ conflict['rule1']['action'] }}">{{ conflict['rule1']['action'] }}</span> 
+                                from {{ conflict['rule1']['source'] }} to {{ conflict['rule1']['destination'] }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-2">
+                            <div class="card-header">Rule 2</div>
+                            <div class="card-body">
+                                <p><span class="{{ conflict['rule2']['action'] }}">{{ conflict['rule2']['action'] }}</span> 
+                                from {{ conflict['rule2']['source'] }} to {{ conflict['rule2']['destination'] }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h6>Resolution Suggestions:</h6>
+                <ul>
+                    <li>Modify one of the rules to make them more specific</li>
+                    <li>Ensure both rules have the same action for overlapping traffic</li>
+                    <li>Remove one of the rules if it's redundant</li>
+                </ul>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <div class="alert alert-success">
+        No conflicts detected. Your ACL rules are consistent.
+    </div>
+{% endif %}
+{% endblock %}

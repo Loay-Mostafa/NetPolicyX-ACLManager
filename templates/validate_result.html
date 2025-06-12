@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}ACL Validation Result{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">ACL Impact Validation</h1>
+
+<div class="card">
+    <div class="card-header">
+        <h5>Validation Results</h5>
+    </div>
+    <div class="card-body">
+        <h6>Testing host: {{ host }}</h6>
+        
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">Before ACL Application</div>
+                    <div class="card-body">
+                        {% if before_reachable %}
+                            <div class="alert alert-success">
+                                <strong>Host is reachable</strong>
+                            </div>
+                            <p>All traffic is allowed by default</p>
+                        {% else %}
+                            <div class="alert alert-danger">
+                                <strong>Host is not reachable</strong>
+                            </div>
+                            <p>Traffic is already blocked</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">After ACL Application</div>
+                    <div class="card-body">
+                        {% if after_reachable %}
+                            <div class="alert alert-success">
+                                <strong>Host will be reachable</strong>
+                            </div>
+                            <p>Traffic will be permitted by the rule</p>
+                        {% else %}
+                            <div class="alert alert-danger">
+                                <strong>Host will not be reachable</strong>
+                            </div>
+                            <p>Traffic will be blocked by the rule</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="alert alert-info mt-4">
+            <strong>Rule details:</strong> {{ rule['action'] }} from {{ rule['source'] }} to {{ rule['destination'] }}
+        </div>
+        
+        <div class="alert {% if after_reachable %}alert-success{% else %}alert-danger{% endif %} mt-3">
+            <strong>Impact:</strong> This rule will {% if after_reachable %}allow{% else %}block{% endif %} traffic to {{ host }}.
+        </div>
+    </div>
+    <div class="card-footer">
+        <a href="/network" class="btn btn-primary">Back to Network Test</a>
+    </div>
+</div>
+{% endblock %}

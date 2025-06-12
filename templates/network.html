@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Network Test{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Network Test</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Ping Test</h5>
+            </div>
+            <div class="card-body">
+                <form action="/network/ping" method="post">
+                    <div class="mb-3">
+                        <label for="host" class="form-label">Host</label>
+                        <input type="text" class="form-control" id="host" name="host" placeholder="IP address or hostname" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Run Ping Test</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>ACL Impact Validation</h5>
+            </div>
+            <div class="card-body">
+                <form action="/network/validate" method="post">
+                    <div class="mb-3">
+                        <label for="rule_id" class="form-label">ACL Rule</label>
+                        <select class="form-select" id="rule_id" name="rule_id" required>
+                            <option value="">Select a rule</option>
+                            {% for rule in rules %}
+                                <option value="{{ rule['id'] }}">
+                                    {{ rule['action'] }} from {{ rule['source'] }} to {{ rule['destination'] }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="host" class="form-label">Test Host</label>
+                        <input type="text" class="form-control" id="host" name="host" placeholder="IP address or hostname" required>
+                    </div>
+                    <button type="submit" class="btn btn-success">Validate ACL Impact</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

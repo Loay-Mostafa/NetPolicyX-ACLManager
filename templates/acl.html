@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}ACL Rules{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">ACL Rules</h1>
+
+<a href="/acl/add" class="btn btn-success mb-3">Add ACL Rule</a>
+
+{% if rules %}
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Device</th>
+                    <th>Action</th>
+                    <th>Source</th>
+                    <th>Destination</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for rule in rules %}
+                    <tr class="{% if rule['is_applied'] %}applied{% else %}not-applied{% endif %}">
+                        <td>{{ rule['device_name'] }}</td>
+                        <td><span class="{{ rule['action'] }}">{{ rule['action'] }}</span></td>
+                        <td>{{ rule['source'] }}</td>
+                        <td>{{ rule['destination'] }}</td>
+                        <td>
+                            {% if rule['is_applied'] %}
+                                <span class="badge bg-success">Applied</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Not Applied</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if rule['is_applied'] %}
+                                <a href="/acl/remove/{{ rule['id'] }}" class="btn btn-sm btn-warning">Remove</a>
+                            {% else %}
+                                <a href="/acl/apply/{{ rule['id'] }}" class="btn btn-sm btn-success">Apply</a>
+                            {% endif %}
+                            <a href="/acl/delete/{{ rule['id'] }}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this rule?')">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        No ACL rules found. Add a rule to get started.
+    </div>
+{% endif %}
+{% endblock %}

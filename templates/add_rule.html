@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Add ACL Rule{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Add ACL Rule</h1>
+
+<div class="card">
+    <div class="card-body">
+        <form method="post" id="ruleForm">
+            <div class="mb-3">
+                <label for="device_id" class="form-label">Device</label>
+                <select class="form-select" id="device_id" name="device_id" required>
+                    <option value="">Select a device</option>
+                    {% for device in devices %}
+                        <option value="{{ device['id'] }}">{{ device['name'] }} ({{ device['ip_address'] }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="action" class="form-label">Action</label>
+                <select class="form-select" id="action" name="action" required>
+                    <option value="">Select an action</option>
+                    <option value="permit">Permit</option>
+                    <option value="deny">Deny</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="source" class="form-label">Source</label>
+                <input type="text" class="form-control" id="source" name="source" placeholder="IP address or 'any'" required>
+            </div>
+            <div class="mb-3">
+                <label for="destination" class="form-label">Destination</label>
+                <input type="text" class="form-control" id="destination" name="destination" placeholder="IP address or 'any'" required>
+            </div>
+            
+            <div class="mb-3">
+                <label>Rule Preview</label>
+                <div class="alert alert-secondary" id="preview">
+                    Fill in the form to see the rule preview
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-success">Save Rule</button>
+            <a href="/acl" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Simple preview functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('ruleForm');
+        const actionInput = document.getElementById('action');
+        const sourceInput = document.getElementById('source');
+        const destinationInput = document.getElementById('destination');
+        const previewDiv = document.getElementById('preview');
+        
+        // Update preview when form fields change
+        form.addEventListener('input', function() {
+            const action = actionInput.value;
+            const source = sourceInput.value;
+            const destination = destinationInput.value;
+            
+            if (action && source && destination) {
+                previewDiv.textContent = `access-list 100 ${action} ip ${source} ${destination}`;
+            } else {
+                previewDiv.textContent = 'Fill in the form to see the rule preview';
+            }
+        });
+    });
+</script>
+{% endblock %}

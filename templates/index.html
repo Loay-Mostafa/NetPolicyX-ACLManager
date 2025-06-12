@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Dashboard</h1>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Devices</h5>
+                <p class="card-text display-4">{{ device_count }}</p>
+                <a href="/devices" class="btn btn-primary">Manage Devices</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">ACL Rules</h5>
+                <p class="card-text display-4">{{ rule_count }}</p>
+                <a href="/acl" class="btn btn-success">Manage Rules</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Conflicts</h5>
+                <p class="card-text display-4">{{ conflict_count }}</p>
+                <a href="/conflicts" class="btn btn-warning">View Conflicts</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Network Test</h5>
+                <p class="card-text"><i class="display-4">→</i></p>
+                <a href="/network" class="btn btn-info">Test Network</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Recent ACL Rules</h5>
+            </div>
+            <div class="card-body">
+                {% if rules %}
+                    <ul class="list-group">
+                        {% for rule in rules[:5] %}
+                            <li class="list-group-item">
+                                <span class="{{ rule['action'] }}">{{ rule['action'] }}</span>
+                                from {{ rule['source'] }} to {{ rule['destination'] }}
+                                <span class="badge bg-{% if rule['is_applied'] %}success{% else %}secondary{% endif %} float-end">
+                                    {% if rule['is_applied'] %}Applied{% else %}Not Applied{% endif %}
+                                </span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-center">No ACL rules found</p>
+                {% endif %}
+            </div>
+            <div class="card-footer">
+                <a href="/acl" class="btn btn-sm btn-outline-primary">View All Rules</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Recent Logs</h5>
+            </div>
+            <div class="card-body">
+                {% if logs %}
+                    <ul class="list-group">
+                        {% for log in logs %}
+                            <li class="list-group-item">
+                                Rule #{{ log['rule_id'] }} - {{ log['operation'] }}
+                                <small class="text-muted float-end">{{ log['created_at'] }}</small>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-center">No logs found</p>
+                {% endif %}
+            </div>
+            <div class="card-footer">
+                <a href="/logs" class="btn btn-sm btn-outline-primary">View All Logs</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

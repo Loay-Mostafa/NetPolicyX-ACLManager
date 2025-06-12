@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Ping Result{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Ping Test Results</h1>
+
+<div class="card">
+    <div class="card-header">
+        <h5>Results for {{ host }}</h5>
+    </div>
+    <div class="card-body">
+        {% if is_reachable %}
+            <div class="alert alert-success">
+                <strong>Host is reachable!</strong>
+            </div>
+        {% else %}
+            <div class="alert alert-danger">
+                <strong>Host is not reachable!</strong>
+            </div>
+        {% endif %}
+        
+        <h6>Output:</h6>
+        <pre class="bg-light p-3">{{ output }}</pre>
+    </div>
+    <div class="card-footer">
+        <a href="/network" class="btn btn-primary">Back to Network Test</a>
+    </div>
+</div>
+{% endblock %}
